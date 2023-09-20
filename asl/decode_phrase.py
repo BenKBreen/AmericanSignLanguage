@@ -2,8 +2,8 @@
 import math
 import numpy as np
 import tensorflow as tf
-from spellchecker import SpellChecker
-from Levenshtein import distance
+#from spellchecker import SpellChecker
+#from Levenshtein import distance
 from collections import Counter
 from collections import defaultdict
 
@@ -113,6 +113,7 @@ def find_phrase(frames):
     
 
 # reconstruct sentence
+'''
 def reconstruct_sentence(s):
     
     # initialize
@@ -150,8 +151,7 @@ def reconstruct_sentence(s):
     
     # return sentence
     return sen
-
-
+'''
 
 
 

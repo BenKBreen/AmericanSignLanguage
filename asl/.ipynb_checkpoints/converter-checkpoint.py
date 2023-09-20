@@ -209,3 +209,17 @@ def show_annotated_video(self):
     return show_frame
 
 
+def show_video(self):
+    
+    # check if assigned
+    if hasattr(self, 'Video'):
+        return self.Video
+    
+    # assign
+    f = show_annotated_video(self)
+    self.Video = interact(f, i=widgets.IntSlider(min=0, max=len(self.frames)-1, step=1, value=0, layout=widgets.Layout(width='1000px')))
+    
+    # return video
+    return self.Video
+
+

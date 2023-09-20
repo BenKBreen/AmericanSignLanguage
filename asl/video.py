@@ -2,9 +2,11 @@
 import math
 import numpy as np
 import tensorflow as tf
+import ipywidgets as widgets
 from .landmarks import *
 from fastai.vision.all import show_image
 from collections import defaultdict
+from ipywidgets import interact, interactive, fixed, interact_manual
 
 
 #################
@@ -65,23 +67,26 @@ def preprocess(x):
                      [  0, 0, 1 ]], dtype=tf.float32)
     
     # left hand 
-    LH = tf.gather(x, range(63), axis = 1) 
-    LH = tf.boolean_mask(LH, tf.reduce_all(~tf.math.is_nan(LH), axis=-1))
+    LH = tf.gather(x, range(63), axis = 1)
+    LD = tf.reduce_all(~tf.math.is_nan(LH), axis=-1)
+    LH = tf.boolean_mask(LH, LD)
     LH = tf.reshape(LH, (tf.shape(LH)[0], 21, 3) )
     LH = tf.linalg.matvec(M, LH)
     
     # right hand 
     RH = tf.gather(x, range(63,126), axis = 1) 
-    RH = tf.boolean_mask(RH, tf.reduce_all(~tf.math.is_nan(RH), axis=-1)) 
+    RD = tf.reduce_all(~tf.math.is_nan(RH), axis=-1)
+    RH = tf.boolean_mask(RH, RD) 
     RH = tf.reshape(RH, (tf.shape(RH)[0], 21, 3))
     
     # dominant hand 
     boo = ( tf.shape(LH)[0] < tf.shape(RH)[0] )
-    x  = tf.cond( boo, lambda : RH, lambda : LH )
-    DH = tf.cond( boo, lambda : 'right', lambda : 'left' )
+    x  = tf.cond( boo, lambda : (RH, 'right', tf.where(RD)), lambda : (LH, 'left', tf.where(LD)) )
+    #HF = tf.cond( boo, lambda
+    #DH = tf.cond( boo, lambda : 'right', lambda : 'left' )
                  
     # return
-    return x, DH
+    return x
 
 
 
@@ -173,10 +178,11 @@ class video:
         # process hands 
         df = self.data[ hands ]
         x = tf.gather(df, tf.range(126), axis=1) # left and right hands data
-        x, dh = preprocess(x)
+        x, dh, hf = preprocess(x)
         
         # assign dominant hand info
         self.hand = x
+        self.hand_frames = [i[0] for i in hf.numpy()]
         self.dominant_hand = tf.compat.as_str_any(dh.numpy())
         self.percentage = 0 if self.number_of_frames == 0 else round( 100 * x.shape[0] / self.number_of_frames, 2)
         
@@ -442,6 +448,7 @@ def show_hands(V):
     # initialize
     # Hframes = hand_frames(V)
     frames = V.frames
+    hframes = V.hand_frames
     phrase = V.phrase
     Data = video_data(V)
     annotated_image = np.zeros((1024,1024,3),dtype=np.uint8)
@@ -450,10 +457,10 @@ def show_hands(V):
     # show function
     def show_frame(frame):
         # Only do frames with dominant hand
-        # hframe = Hframes[frame]
+        hframe = hframes[frame]
 
         # Get landmark data
-        landmarks = get_landmarks_data(V, frame)
+        landmarks = get_landmarks_data(V, hframe)
 
         # Remove face and pose landmarks 
         landmarks.face_landmarks = Landmark_make_nan(landmarks.face_landmarks)
@@ -483,3 +490,17 @@ def show_hands(V):
     
     return show_frame
 
+
+
+def hand_video(self):
+    
+    # check if assigned
+    if hasattr(self, 'Video'):
+        return self.Video
+    
+    # assign
+    f = show_hands(self)
+    self.Video = interact(f, frame=widgets.IntSlider(min=0, max=len(self.hand_frames)-1, step=1, value=0, layout=widgets.Layout(width='1000px')))
+    
+    # return video
+    return self.Video
