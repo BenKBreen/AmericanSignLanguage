@@ -205,7 +205,7 @@ def show_annotated_video(self):
         # annotated image and show
         annotated_image = draw_landmarks_on_image(data[i], land[i])
         show_image(annotated_image, figsize=(6,6), title=f'Frame: {i} of {len(data)}   Phrase: {phrase}    Prediction: {labels[i]}')
-    
+        
     return show_frame
 
 

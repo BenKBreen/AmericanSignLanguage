@@ -44,10 +44,11 @@ class metadata:
     def __init__(self, ID):
         
         # assert 
-        assert ID in { 'supplemental' , 'train' }, 'Make sure that ID is either ""supplemental"" or ""train""' 
+        assert ID in { 'supplemental', 'train', 'colab' }, 'Make sure that ID is either ""supplemental"" or ""train""' 
         
         # select path
         if ID == 'supplemental': path = '/Volumes/My Passport for Mac/asl-fingerspelling/supplemental_metadata.csv' 
+        elif ID == 'colab': path = '/content/drive/MyDrive/sample/supplemental_metadata.csv'
         elif ID == 'train': path = '/Volumes/My Passport for Mac/asl-fingerspelling/train.csv' 
         
         # load dataframe
@@ -84,6 +85,8 @@ class datafile:
         # load dataframe 
         if datalabel.id == 'supplemental':
             path = '/Volumes/My Passport for Mac/asl-fingerspelling/supplemental_landmarks/' + file + '.parquet'
+        elif datalabel.id == 'colab':
+            path = '/content/drive/MyDrive/sample/' + file + '.parquet'
         else:
             path = '/Volumes/My Passport for Mac/asl-fingerspelling/train_landmarks/' + file + '.parquet'
         
