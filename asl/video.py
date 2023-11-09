@@ -7,7 +7,6 @@ from .landmarks import *
 from fastai.vision.all import show_image
 from collections import defaultdict
 from ipywidgets import interact, interactive, fixed, interact_manual
-from IPython.display import clear_output
 
 
 #################
@@ -83,8 +82,6 @@ def preprocess(x):
     # dominant hand 
     boo = ( tf.shape(LH)[0] < tf.shape(RH)[0] )
     x  = tf.cond( boo, lambda : (RH, 'right', tf.where(RD)), lambda : (LH, 'left', tf.where(LD)) )
-    #HF = tf.cond( boo, lambda
-    #DH = tf.cond( boo, lambda : 'right', lambda : 'left' )
                  
     # return
     return x
@@ -485,8 +482,9 @@ def show_hands(V):
         landmarks.right_hand_landmarks = shift( obj, np.array([.6,.7,0] ) )
         
         # show image 
-        clear_output()
-        show_image(draw_landmarks(landmarks,annotated_image),figsize=(6,6),title=f'frame [{frame} of {len(frames)-1}] {phrase:50} Prediction: { label(V,frame) }')
+        # clear_output()
+        cv2_imshow(draw_landmarks(landmarks,annotated_image),figsize=(6,6),title=f'frame [{frame} of {len(frames)-1}] {phrase:50} Prediction: { label(V,frame) }')
+        # show_image(draw_landmarks(landmarks,annotated_image),figsize=(6,6),title=f'frame [{frame} of {len(frames)-1}] {phrase:50} Prediction: { label(V,frame) }')
     
     return show_frame
 

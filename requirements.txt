@@ -1,0 +1,12 @@
+fastai==2.7.12
+ipython==8.10.0
+ipywidgets==8.0.6
+mediapipe==0.10.1
+numpy==1.23.5
+opencv_contrib_python==4.7.0.72
+pandas==1.5.3
+protobuf==3.20.3
+pyspellchecker==0.7.2
+setuptools==65.6.3
+tensorflow_macos==2.12.0
+tf_nightly_macos==2.13.0.dev20230429

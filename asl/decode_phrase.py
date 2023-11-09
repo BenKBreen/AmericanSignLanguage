@@ -2,8 +2,6 @@
 import math
 import numpy as np
 import tensorflow as tf
-#from spellchecker import SpellChecker
-#from Levenshtein import distance
 from collections import Counter
 from collections import defaultdict
 
@@ -112,46 +110,6 @@ def find_phrase(frames):
     return s, newlabels
     
 
-# reconstruct sentence
-'''
-def reconstruct_sentence(s):
-    
-    # initialize
-    n = len(s)
-    
-    # spellchecker
-    spell = SpellChecker()
-    
-    # dp array
-    dp = defaultdict( lambda : (0,[]) )
-    for i in range(n+1): dp[i] = (i, [])
-    
-    # loop
-    for i in range(n):
-        for j in range(i,n+1):
-            
-            # word
-            word = s[i:j]
-            
-            # correct word
-            cword = spell.correction(word)
-            
-            # distance
-            d = len(word) if cword == None else distance(word, cword)
-            
-            # update dp array
-            if dp[i][0] + d < dp[j][0]:
-                dp[j] = ( dp[i][0] + d, dp[i][1] + [ cword ] )
-             
-    # score + words     
-    score, words = dp[n]
-    
-    # sentence
-    sen = ' '.join( words )
-    
-    # return sentence
-    return sen
-'''
 
 
 

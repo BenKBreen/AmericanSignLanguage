@@ -1,0 +1,2 @@
+[console_scripts]
+aslread = asl.command_line:aslread

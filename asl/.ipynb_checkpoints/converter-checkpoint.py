@@ -83,15 +83,12 @@ def process_video(self):
             
             # create the landmark
             x = landmark_pb2.LandmarkList()
-            # x = landmark_pb2.NormalizedLandmarkList()
             for v in frame.hand_landmarks[0]:
-                # v = np.array([v.x, v.y, v.z])
                 v = np.matrix([v.x, v.y, v.z]) # make vector
                 v = np.array(v @ A)[0] # scale
                 x.landmark.add( x=v[0], y=v[1], z=v[2] ) 
             
             # center the landmark
-            # x = shift(x, np.array([0., 0., 0. ]))
             x = center(x)
             
             # extract the data 
@@ -182,16 +179,17 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         y_coordinates = [landmark.y for landmark in hand_landmarks]
         text_x = int(min(x_coordinates) * width)
         text_y = int(min(y_coordinates) * height) - MARGIN
-
+        
+        # This is ushually wrong so we wont print
         # Draw handedness (left or right hand) on the image.
-        cv2.putText(annotated_image, f"{handedness[0].category_name}",
-                (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
-                FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
+        #cv2.putText(annotated_image, f"{handedness[0].category_name}",
+                #(text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+                #FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
 
     return annotated_image
   
 
-# showing an annotated video
+# showing an annotated video frame function
 def show_annotated_video(self):
     
     data = self.frames
@@ -209,6 +207,7 @@ def show_annotated_video(self):
     return show_frame
 
 
+# showing an annotated video interact
 def show_video(self):
     
     # check if assigned
@@ -221,5 +220,91 @@ def show_video(self):
     
     # return video
     return self.Video
+
+
+
+# write video to a file
+def write_video(self):
+    
+    # initialize
+    data = self.frames
+    land = self.landmarks
+    labels = self.labels
+    phrase = self.phrase
+    hands = self.hand_frames
+    
+    # properties
+    n_frames = len(data)
+    height, width = self.resolution
+    file_name = (self.path).split('/')[-1].split('.')[0] + '_annotated.avi'
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    
+    # final properties
+    bord = 10
+    fwidth = width + height + 4*bord
+    fheight = height + 2*bord + 200
+    
+    # video file
+    result = cv2.VideoWriter(file_name,  
+                             cv2.VideoWriter_fourcc(*'MJPG'), 
+                             10, 
+                             (fwidth, fheight))
+    
+    # loop
+    for i in range(n_frames):
+        
+        # get annotated image
+        annotated_image = draw_landmarks_on_image(data[i], land[i])
+        annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+        annotated_image = cv2.copyMakeBorder(annotated_image,10,10,10,10,cv2.BORDER_CONSTANT,value=[255,255,255] )
+        
+        # draw normalized hand
+        canvas = np.zeros((height,height,3),dtype=np.uint8)
+        canvas[:] = (255, 255, 255)
+        hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+        hand_landmarks_proto.landmark.add( x=0.5, y=0.6, z=0.0 ) # landmark 0
+        hand_landmarks_proto.landmark.extend([
+        landmark_pb2.NormalizedLandmark(x = 2*v[0]+0.5, y=2*v[1]+0.6, z=2*v[2]) for v in hands[i][0]]) # landmarks 1-20
+        solutions.drawing_utils.draw_landmarks(
+                                                canvas,
+                                                hand_landmarks_proto,
+                                                solutions.hands.HAND_CONNECTIONS,
+                                                solutions.drawing_styles.get_default_hand_landmarks_style(),
+                                                solutions.drawing_styles.get_default_hand_connections_style())
+        canvas = cv2.copyMakeBorder(canvas,10,10,10,10,cv2.BORDER_CONSTANT,value=[255,255,255] )
+        
+        # add prediction
+        title = f'Prediction: {labels[i]}'
+        cv2.putText(canvas, title, (height // 4 + 100, height - 200), font, 2, (0,0,0), 3, 0)
+        
+        # put annotated image and canvas together
+        annotated_image = cv2.hconcat((annotated_image, canvas))
+        
+        # header for text
+        header = np.zeros((200, annotated_image.shape[1], 3), np.uint8)
+        header[:] = (255, 255, 255) 
+        annotated_image = cv2.vconcat((header, annotated_image))
+        
+        # add title
+        title = f'Frame: {i} of {len(data)}   Phrase: {phrase}'
+        cv2.putText( annotated_image, title, (fwidth // 3 + 200, 155), font, 2, (0,0,0), 3, 0)
+        
+        
+        # write result
+        result.write( annotated_image )
+        
+        # helpful prints for debugging
+        # cv2.imshow('frame', annotated_image )
+        #if cv2.waitKey(1) == ord('q'):
+            #break
+
+    result.release()
+    cv2.destroyAllWindows()
+    
+    # print sucess
+    print('Video saved')
+    
+    # return file name
+    return file_name
 
 
