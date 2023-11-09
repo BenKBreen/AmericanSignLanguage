@@ -1,7 +1,8 @@
 # American Sign Language
 
 This package is video interpreter which can detect 59 distinct characters and symbols from American Sign Language. 
-![ASL](https://github.com/BenKBreen/AmericanSignLanguage/assets/38701186/3943af0f-4852-45ee-856d-f406e7bf23db)
+
+<img src="ASL.gif" width="800" height="400"/>
 
 # Setup 
 Complete the following steps to install the package. 
