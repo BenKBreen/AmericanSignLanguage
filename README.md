@@ -2,7 +2,7 @@
 
 This package is video interpreter which can detect 59 distinct characters and symbols from American Sign Language. 
 
-<img src="ASL.gif" width="800" height="400"/>
+<img src="ASL.gif" width="900" height="450"/>
 
 # Setup 
 Complete the following steps to install the package. 
@@ -30,7 +30,7 @@ Videos are processed in the following manner:
 
 3. The normalized hand is then fed into Tensoflow CNN model. This model makes a prediction for each frame in the form of a probability distribution e.g. P(sign in frame i = 'u') = 0.5, P(sign in frame i = 'v') = 0.3, ...
 
-4. Several scores are then created for the entire video based on character predictions for each frame (with a slight bonus for conseuctive frames predicting the same character). The best score is then converted into a phrase for the video.  
+4. We assign a phrase to the entire video in the following manner: We consider all possible labeling of the frames where each individual frame is assigned a character. For a given label, we can assign a score based on the aggragate sum of our model predicting the given characters for each frame with a slight weighting bonus for consecutive frames predicting the same character. The best overall score is then converted into a phrase for the video.  
 
 5. An annotated video is the created with the following information
 
