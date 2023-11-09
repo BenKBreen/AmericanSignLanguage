@@ -2,7 +2,7 @@
 
 This package is video interpreter which can detect 59 distinct characters and symbols from American Sign Language. 
 
-Ex: Attempt to sign "Hi Artem"
+Ex: An attempt to sign "Hi Artem"
 
 <img src="ASL.gif" width="900" height="450"/>
 
