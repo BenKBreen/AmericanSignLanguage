@@ -4,6 +4,8 @@ This package is video interpreter which can detect 59 distinct characters and sy
 
 <img src="ASL.gif" width="900" height="450"/>
 
+Test where I attemp to sign "Hi Artem"
+
 # Setup 
 Complete the following steps to install the package. 
 
