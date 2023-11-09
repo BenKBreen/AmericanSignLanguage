@@ -2,9 +2,10 @@
 
 This package is video interpreter which can detect 59 distinct characters and symbols from American Sign Language. 
 
+Example where I attempt to sign "Hi Artem"
+
 <img src="ASL.gif" width="900" height="450"/>
 
-Test where I attemp to sign "Hi Artem"
 
 # Setup 
 Complete the following steps to install the package. 
