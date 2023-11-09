@@ -48,6 +48,10 @@ Videos are processed in the following manner:
 
 The Tensorflow CNN model was trained on data from the Kaggle American Sign Language competition. Information can be found [here](https://www.kaggle.com/competitions/asl-fingerspelling). 
 
+# Acknowledgements
+
+I would like to thank my mentor Artem Yankov for guiding me through this project. 
+
 
 
 
