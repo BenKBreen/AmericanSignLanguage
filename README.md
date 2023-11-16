@@ -31,13 +31,13 @@ Videos are processed in the following manner:
   
    **Note:** The z-coordinate (depth) is often inaccurate.
 
-4. For each frame, the 21 datapoints produced from the Hand Landmark Detector are transfered to Tensorflow. Here the data is rescaled and centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin. The hand is rotated into a fixed position which depends on whether the front or the back is facing the camera
+2. The hand landmark datapoints are loaded as 3 x 21 tensors into Tensorflow. The datapoints are rescaled, centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin, and rotated into a fixed position using an orthogonal transformation. The position depends on whether the front or the back of the hand is shown in the given frame. 
 
-5. The normalized hand is then fed into Tensoflow CNN model. This model makes a prediction for each frame in the form of a probability distribution e.g. P(sign in frame i = 'u') = 0.5, P(sign in frame i = 'v') = 0.3, ...
+3. The processed datapoints are fed into a Tensoflow CNN model trained on data from the American Sign Language competition on Kaggle. The model makes frame-by-frame predictions in the form of probability distributions representing the likelihood of each of the 59 characters to represent the sign in a given frame e.g. P(sign in frame i = 'u') = 0.5, P(sign in frame i = 'v') = 0.3, ...
 
-6. A phrase is assigned to the video. We do this in the folling manner: Consider all possible labeling of the frames where each individual frame is assigned a character. For a given label, we can assign a score based on the aggragate sum of our model predicting the given characters for each frame with a slight weighting bonus for consecutive frames predicting the same character. The best overall score is then converted into a phrase for the video.  
+4. A phrase is assigned to the entire video. This is done in the folling manner: we consider all labelings of the frames with the 59 distinct characters and assign a score to each labeling based on the aggragate sum of the model predicting the given character for a given frame with a slight weighting bonus for consecutive frames predicting the same character. The best score is converted to a phrase for the video.  
 
-7. An annotated video is the created with the following information:
+5. An annotated video is the created with the following information:
 
     -  Annotated original video with hand landmarks added
     -  Normalized hand landmarks
