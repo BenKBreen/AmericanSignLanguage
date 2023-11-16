@@ -22,7 +22,7 @@ Complete the following steps to install the package.
 # Usage
 Select a video file that you would like to have interpreted. Navigate to the folder containing the file. Run the following command from the command line:
 
-  ```aslread <video.file>```
+  ```aslread <path to video>```
 
 # Method
 Videos are processed in the following manner:
@@ -31,7 +31,7 @@ Videos are processed in the following manner:
   
    **Note:** The z-coordinate (depth) is often inaccurate.
 
-4. For each frame, the 21 datapoints recovered from the Hand Landmark Detector are transfered to Tensorflow. Here the data is rescaled and centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin. The hand is rotated into a fixed position which depends on whether the front or the back is facing the camera
+4. For each frame, the 21 datapoints produced from the Hand Landmark Detector are transfered to Tensorflow. Here the data is rescaled and centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin. The hand is rotated into a fixed position which depends on whether the front or the back is facing the camera
 
 5. The normalized hand is then fed into Tensoflow CNN model. This model makes a prediction for each frame in the form of a probability distribution e.g. P(sign in frame i = 'u') = 0.5, P(sign in frame i = 'v') = 0.3, ...
 
