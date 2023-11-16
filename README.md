@@ -31,7 +31,7 @@ Videos are processed in the following manner:
   
    **Note:** The z-coordinate (depth) is often inaccurate.
 
-2. The landmark data is transfered into Tensorflow. The datapoints are rescaled, centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin, and rotated into a fixed position using an orthogonal transformation. The position depends on whether the front or the back of the hand is shown in the given frame. 
+2. The landmark data is transfered into Tensorflow. The datapoints are rescaled, centered so that Hand Landmark datapoint 0 (datapoint on the wrist) is now at the origin, and rotated into a fixed position using an orthogonal transformation. 
 
 3. The processed datapoints are fed into a Tensoflow CNN model trained on data from the American Sign Language competition on Kaggle. The model makes frame-by-frame predictions in the form of probability distributions representing the likelihood of each of the 59 characters to represent the sign in a given frame e.g. P(sign in frame i = 'u') = 0.5, P(sign in frame i = 'v') = 0.3, ...
 
